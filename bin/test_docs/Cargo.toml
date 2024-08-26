@@ -1,0 +1,15 @@
+[package]
+name = "test_docs"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+rm-send-macros = { path = "../..", features = ["enabled"] }
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
+[features]
+default = []
+glommio = []

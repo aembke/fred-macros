@@ -1,0 +1,28 @@
+[package]
+name = "rm-send-macros"
+edition = "2021"
+authors = ["Alec Embke <aembke@gmail.com>"]
+description = "Procedural macros that conditionally change or remove `Send` bounds."
+exclude = ["tests", ".circleci", "docs"]
+homepage = "https://github.com/aembke/rm-send-macros"
+keywords = ["redis", "valkey", "cluster", "sentinel"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/aembke/rm-send-macros"
+version = "0.0.1"
+
+[lib]
+proc-macro = true
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
+[dependencies]
+proc-macro2 = "1.0.86"
+syn = { version = "2.0", features = ["full", "extra-traits"] }
+quote = "1"
+
+[features]
+default = []
+enabled = []
