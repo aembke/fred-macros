@@ -15,11 +15,11 @@ use proc_macro::TokenStream;
 mod inner {
   use proc_macro2::TokenStream;
   use quote::ToTokens;
-  use syn::{parse::Parser, GenericParam, Item, ItemFn, ReturnType, Type, TypeParamBound, WherePredicate};
+  use syn::{GenericParam, Item, ItemFn, ReturnType, Type, TypeParamBound, WherePredicate};
 
   fn filter_send_bounds(
-    bounds: impl IntoIterator<Item = TypeParamBound>,
-  ) -> impl IntoIterator<Item = TypeParamBound> {
+    bounds: impl IntoIterator<Item=TypeParamBound>,
+  ) -> impl IntoIterator<Item=TypeParamBound> {
     bounds.into_iter().filter(|bound| {
       // TODO handle other path kinds
       if let TypeParamBound::Trait(bound) = bound {
