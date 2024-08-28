@@ -17,8 +17,10 @@ mod inner {
   use quote::ToTokens;
   use syn::{
     GenericParam,
+    ImplItem,
     Item,
     ItemFn,
+    ItemImpl,
     ItemTrait,
     ReturnType,
     Signature,
@@ -29,8 +31,8 @@ mod inner {
   };
 
   fn filter_send_bounds(
-    bounds: impl IntoIterator<Item = TypeParamBound>,
-  ) -> impl IntoIterator<Item = TypeParamBound> {
+    bounds: impl IntoIterator<Item=TypeParamBound>,
+  ) -> impl IntoIterator<Item=TypeParamBound> {
     bounds.into_iter().filter(|bound| {
       // TODO handle other path kinds
       if let TypeParamBound::Trait(bound) = bound {
@@ -69,6 +71,15 @@ mod inner {
     ast.into_token_stream()
   }
 
+  fn rm_from_impl(mut ast: ItemImpl) -> TokenStream {
+    for item in ast.items.iter_mut() {
+      if let ImplItem::Fn(item) = item {
+        rm_from_fn_sig(&mut item.sig);
+      }
+    }
+    ast.into_token_stream()
+  }
+
   fn rm_from_item_trait(mut ast: ItemTrait) -> TokenStream {
     ast.supertraits = filter_send_bounds(ast.supertraits.clone()).into_iter().collect();
 
@@ -85,6 +96,7 @@ mod inner {
     match syn::parse2::<Item>(input.clone()) {
       Ok(Item::Fn(item)) => rm_from_item_fn(item),
       Ok(Item::Trait(item)) => rm_from_item_trait(item),
+      Ok(Item::Impl(item)) => rm_from_impl(item),
       _ => input,
     }
   }
@@ -308,6 +320,24 @@ mod tests {
         async move { Ok(()) }
       }
     };
+    let modified = rm_send(input);
+    assert!(!modified.to_string().contains("Send"));
+  }
+
+  #[test]
+  fn should_remove_trait_impl() {
+    let input = quote! {
+      impl T4 for Foo {
+        fn bar<A, B>(&self, _a: A, _b: B) -> impl Future<Output = ()> + Send
+        where
+          A: T1 + Send,
+          B: T2 + Send + Sync,
+        {
+          async move { () }
+        }
+      }
+    };
+
     let modified = rm_send(input);
     assert!(!modified.to_string().contains("Send"));
   }
