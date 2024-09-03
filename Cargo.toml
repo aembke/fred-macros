@@ -12,6 +12,7 @@ exclude = ["bin"]
 
 [lib]
 proc-macro = true
+doctest = false
 
 [package.metadata.docs.rs]
 all-features = true

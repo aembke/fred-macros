@@ -102,10 +102,13 @@ mod inner {
   }
 }
 
-/// Conditionally removes `+Send` constraints on trait bounds in generic arguments, where clause predicates, and
+/// Conditionally removes `Send` and `Sync` bounds in generic arguments, where clause predicates, and
 /// `impl Trait` return types.
 ///
-/// ```rust no_compile no_run
+///
+/// ## Item (function) modification:
+///
+/// ```rust
 /// use fred_macros::rm_send_if;
 /// use std::future::Future;
 ///
@@ -132,13 +135,62 @@ mod inner {
 ///   unimplemented!()
 /// }
 ///
-/// #[cfg(not(feature = "glommio))]
+/// #[cfg(not(feature = "glommio"))]
 /// pub async fn foo<R, A, B>(a: A, b: B) -> impl Future<Output = R> + Send
 /// where
 ///   A: T1 + Send,
 ///   B: T2 + Send,
 /// {
 ///   unimplemented!()
+/// }
+/// ```
+///
+/// ### Trait modification
+///
+/// ```rust
+/// use fred_macros::rm_send_if;
+/// use std::future::Future;
+///
+/// trait T1 {}
+/// trait T2 {}
+///
+/// /// Test trait documentation.
+/// #[rm_send_if(feature = "glommio")]
+/// pub trait T3: Clone + Send + Sync {
+///   /// Test fn documentation
+///   fn bar<A, B>(&self, _a: A, _b: B) -> impl Future<Output = ()> + Send
+///   where
+///     A: T1 + Send,
+///     B: T2 + Send + Sync,
+///   {
+///     async move { () }
+///   }
+/// }
+///
+/// // will be modified to the following
+///
+/// #[cfg(feature = "glommio")]
+/// pub trait T3: Clone {
+///   /// Test fn documentation
+///   fn bar<A, B>(&self, _a: A, _b: B) -> impl Future<Output = ()>
+///   where
+///     A: T1,
+///     B: T2,
+///   {
+///     async move { () }
+///   }
+/// }
+///
+/// #[cfg(not(feature = "glommio"))]
+/// pub trait T3: Clone + Send + Sync {
+///   /// Test fn documentation
+///   fn bar<A, B>(&self, _a: A, _b: B) -> impl Future<Output = ()> + Send
+///   where
+///     A: T1 + Send,
+///     B: T2 + Send + Sync,
+///   {
+///     async move { () }
+///   }
 /// }
 /// ```
 #[proc_macro_attribute]
@@ -154,7 +206,7 @@ fn wrap_cfg_attr(args: TokenStream, modified: TokenStream, input: TokenStream) -
     .unwrap()
 }
 
-/// Conditionally removes `+Send` constraints on trait bounds in generic arguments, where clause predicates, and
+/// Conditionally removes `Send` and `Sync` bounds in generic arguments, where clause predicates, and
 /// `impl Trait` return types.
 ///
 ///
