@@ -31,8 +31,8 @@ mod inner {
   };
 
   fn filter_send_bounds(
-    bounds: impl IntoIterator<Item=TypeParamBound>,
-  ) -> impl IntoIterator<Item=TypeParamBound> {
+    bounds: impl IntoIterator<Item = TypeParamBound>,
+  ) -> impl IntoIterator<Item = TypeParamBound> {
     bounds.into_iter().filter(|bound| {
       // TODO handle other path kinds
       if let TypeParamBound::Trait(bound) = bound {
