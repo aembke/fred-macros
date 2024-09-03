@@ -1,6 +1,6 @@
-extern crate rm_send_macros;
+extern crate fred_macros;
 
-use rm_send_macros::rm_send_if;
+use fred_macros::rm_send_if;
 use std::future::Future;
 
 pub trait T1 {}

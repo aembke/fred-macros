@@ -106,7 +106,7 @@ mod inner {
 /// `impl Trait` return types.
 ///
 /// ```rust no_compile no_run
-/// use rm_send_macros::rm_send_if;
+/// use fred_macros::rm_send_if;
 /// use std::future::Future;
 ///
 /// trait T1 {}
@@ -161,7 +161,7 @@ fn wrap_cfg_attr(args: TokenStream, modified: TokenStream, input: TokenStream) -
 /// ## Item (function) modification:
 ///
 /// ```rust
-/// use rm_send_macros::rm_send_if;
+/// use fred_macros::rm_send_if;
 /// use std::future::Future;
 ///
 /// trait T1 {}
@@ -200,7 +200,7 @@ fn wrap_cfg_attr(args: TokenStream, modified: TokenStream, input: TokenStream) -
 /// ### Trait modification
 ///
 /// ```rust
-/// use rm_send_macros::rm_send_if;
+/// use fred_macros::rm_send_if;
 /// use std::future::Future;
 ///
 /// trait T1 {}

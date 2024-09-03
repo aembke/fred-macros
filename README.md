@@ -1,13 +1,13 @@
-Procedural macros that conditionally change or remove `Send` bounds.
+Procedural macros that conditionally change or remove `Send` and `Sync` bounds.
 
 ## Examples
 
 ### Item (function) Modification
 
 ```rust 
-extern crate rm_send_macros;
+extern crate fred_macros;
 
-use rm_send_macros::rm_send_if;
+use fred_macros::rm_send_if;
 use std::future::Future;
 
 pub trait T1 {}
@@ -57,9 +57,9 @@ pub trait T3 {
 ### Trait Modification
 
 ```rust
-extern crate rm_send_macros;
+extern crate fred_macros;
 
-use rm_send_macros::rm_send_if;
+use fred_macros::rm_send_if;
 use std::future::Future;
 
 trait T1 {}
