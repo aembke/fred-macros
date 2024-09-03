@@ -7,7 +7,7 @@ homepage = "https://github.com/aembke/fred-macros"
 license = "MIT"
 readme = "README.md"
 repository = "https://github.com/aembke/fred-macros"
-version = "0.0.1"
+version = "0.1.0"
 exclude = ["bin"]
 
 [lib]
